@@ -20,12 +20,13 @@ class UsersController < ApplicationController
   def show
     user = User.find(params[:id])
     render json: user
+  rescue ActiveRecord::RecordNotFound
+    render text: "Ain't there."
   end
 
   def update
     user = User.find(params[:id])
-    user.update(user_params)
-    if user.save
+    if user.update(user_params)
       render json: user
     else
       render(
@@ -41,11 +42,13 @@ class UsersController < ApplicationController
     else
       render text: "Could not destroy my friend!"
     end
+  rescue ActiveRecord::RecordNotFound
+    render text: "Ain't there."
   end
 
   private
   def user_params
-    params[:user].permit(:email, :name)
+    params[:user].permit(:username)
   end
 
 end

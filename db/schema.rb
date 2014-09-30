@@ -11,7 +11,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140929181015) do
+ActiveRecord::Schema.define(version: 20140929204917) do
+
+  create_table "comments", force: true do |t|
+    t.integer  "commentable_id"
+    t.string   "commentable_type"
+    t.text     "body"
+    t.integer  "author_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "comments", ["author_id"], name: "index_comments_on_author_id"
+  add_index "comments", ["commentable_id", "commentable_type"], name: "index_comments_on_commentable_id_and_commentable_type"
 
   create_table "contact_shares", force: true do |t|
     t.integer  "contact_id"
@@ -35,6 +47,17 @@ ActiveRecord::Schema.define(version: 20140929181015) do
   add_index "contacts", ["user_id", "email"], name: "index_contacts_on_user_id_and_email", unique: true
   add_index "contacts", ["user_id", "name"], name: "index_contacts_on_user_id_and_name"
   add_index "contacts", ["user_id"], name: "index_contacts_on_user_id"
+
+  create_table "favorites", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "contact_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "favorites", ["contact_id"], name: "index_favorites_on_contact_id"
+  add_index "favorites", ["user_id", "contact_id"], name: "index_favorites_on_user_id_and_contact_id", unique: true
+  add_index "favorites", ["user_id"], name: "index_favorites_on_user_id"
 
   create_table "users", force: true do |t|
     t.datetime "created_at"
